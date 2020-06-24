@@ -1,0 +1,25 @@
+Reporting period can show average/total points
+ability to edit? (and ability to move point to different child)
+daily/weekly/monthly views
+extra table to hold record of rewards?
+
+List of resets to view historical records
+Admin Page? (50x50px pics for current scores)
+------------------
+
+DONE:
+-----------------
+Notes under each child.
+good points quick add
+
+good points display
+
+Icon showing who is in the lead
+Detailed point form - popup?
+'Quick add point' button
+button for detailed add point
+Point per row so we have notes and timestamps
+Photos of the kids for easy viewing
+TABLES:
+points [pid|kid|note|timestamp]
+kids [kid|name]

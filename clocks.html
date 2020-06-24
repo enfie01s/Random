@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><!--
+to set clock colours use #countryname.clock{background:colour !important;} ...for example (#london.clock{background:blue !important;})
+to add more clocks, copy from a clock block between 'clock' comments and change the id to country and the digitime id to prefix with country
+then add a javascript function call for getDeg('singapore',+8); (set the country name and time zone difference eg +8) and in the body onload add startTime('singapore',+8) with the country name and time zone difference
+
+-->
+<style type="text/css">
+body {
+padding:0;
+margin:0;
+width:100%;
+height:100%;
+font-family: Arial,Helvetica, "sans-serif";
+
+}
+.clockdiv{text-align:center}
+.clockholder{
+	text-align:center;
+	width:32%;
+	margin:auto;
+	display:inline-block;
+}
+.country{
+	font-weight:bold;
+	background-image: linear-gradient(to bottom, #7D7F82 0%, #262223 50%, #7D7F82 80%, #565557 100%);
+	border-top-left-radius: 0.5em;
+	border-top-right-radius: 0.5em;
+	padding:0.4em;
+}
+.digitime{
+	background: rgba(0,0,0,0.5);
+	border-bottom-left-radius: 0.5em;
+	border-bottom-right-radius: 0.5em;
+	padding:0.2em 0.4em;
+}
+.country,
+.digitime{
+	position:relative;
+	top:-1.1em;
+	left:0;
+	width:82%;
+	margin:auto;
+	font-size:3vw;
+	letter-spacing:0.05em;
+	color:#fff;
+	box-shadow: 0 0 0.4em rgba(0,0,0,0.5);
+	-webkit-box-shadow: 0 0 0.4em rgba(0,0,0,0.5);
+}
+.clock::before {
+	border-radius: 100%;
+	width: 100%;
+	height:100%;
+	content: '';
+	background-image: linear-gradient(to bottom, #7D7F82 0%, #262223 50%, #7D7F82 100%);
+	padding: 0.6em;
+	top: -0.6em;
+	left: -0.6em;
+	position:absolute;
+	z-index:-1;
+	border:0.05em solid #333;
+	box-shadow: 0 0 0.5em rgba(0,0,0,0.5);
+	-webkit-box-shadow: 0 0 0.5em rgba(0,0,0,0.5);
+}
+
+.clock {
+	width:8.8em;
+	height:8.8em;
+	top:0em;
+	left:0em;
+	position:relative;
+	border-radius:4.4em;
+	-webkit-border-radius:4.4em;
+	box-shadow: inset 0.15em 0.2em 0.05em rgba(0,0,0,0.3),inset 0.2em 0.4em 0.2em rgba(0,0,0,0.2);
+	-webkit-box-shadow: inset 0.15em 0.2em 0.05em rgba(0,0,0,0.3),inset 0.2em 0.4em 0.2em rgba(0,0,0,0.2);
+	background: #7d7f82; /* Old browsers */
+	background: -moz-radial-gradient(center, ellipse cover,  #7d7f82 0%, #7d7f82 40%, #262223 100%); /* FF3.6-15 */
+	background: -webkit-radial-gradient(center, ellipse cover,  #7d7f82 0%,#7d7f82 40%,#262223 100%); /* Chrome10-25,Safari5.1-6 */
+	background: radial-gradient(ellipse at center,  #7d7f82 0%,#7d7f82 40%,#262223 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7d7f82', endColorstr='#262223',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+	border-width:0.05em;
+	border-style:solid;
+	border-color:#555;
+	font-size:2.9vw;
+	display:inline-block;
+	margin:1em;
+}
+.innercircle { 
+	width:7.84em;
+	height:7.84em;
+	padding-top:4.09em;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	left:0.49em;
+	top:0.49em;
+	position:absolute;
+	border:solid 0.03em rgba(60,60,60,1);
+	border-radius:4.09em;  
+}
+.ii {
+	padding-left:4.35em;
+	position:absolute;
+}
+b, i {
+	height:7.82em; 
+	position:absolute;
+	display:block;
+}
+b {
+	border:solid 0 #D1D2D3;
+	border-width:0.5em 0;
+	width:0.12em;
+}
+i {
+	border:solid 0 rgba(0,0,0,0.5);
+	border-width:0.5em 0;
+	width:0.04em;
+}
+b>i,i>i {
+	transform:rotate(6deg) ;
+	margin-top:-0.49em;
+}
+b>b  {
+	transform:rotate(30deg);
+	-ms-transform:rotate(30deg);
+	-webkit-transform:rotate(30deg);
+	margin-top:-0.3em; 
+}
+b>i {
+	left:0.05em;
+}
+
+.ss, .mm, .hh {
+	width:8.0em;
+	height:8.0em;
+	top:0.4em;
+	left:0.4em;
+	position:absolute;
+}
+.s {
+	width:0.1em;
+	height:4.8em; 
+	top:0.6em;
+	left:3.95em;
+	position:relative; 
+	background:#a00;
+	outline: 1px solid transparent; 
+}
+.sr {
+	width:0.3em;
+	height:0.3em;
+	background:#a00;
+	margin:-0.95em 0 0 3.84em;
+	border-radius:0.15em;
+}
+.m {
+	height:4.8em;
+	left:3.89em;
+	width:0.22em;
+	position:relative;
+	background:#222;
+	border:0 0 3.2em 0;
+	outline: 1px solid transparent;
+}
+.mr {
+	width:0.5em;
+	height:0.5em;
+	background:#222;
+	margin:-1.05em 0 0 3.74em;
+	border-radius:0.25em;
+}
+.h { 
+	width:0.3em;
+	height:3.4em;
+	left:3.85em;
+	position:relative; 
+	background:#222;
+	margin-top:1.3em; 
+	outline: 1px solid transparent;
+	transform-origin: 50% 80% 0;
+	-webkit-transform-origin: 50% 80% 0;
+}
+.sh {
+	width:8.0em;
+	height:8.0em;
+	top:0.15em;
+	left:0.05em;
+	position:absolute;
+}
+.sh .s, .sh .m, .sh .h, .sh .mr  {
+	background:rgba(0,0,0,0.2);
+	box-shadow:0 0 0.05em rgba(0,0,0,0.2), 0 0 0.025em rgba(0,0,0,0.2);
+}
+@keyframes secsweep {
+0% { transform: translate(0, 1.0em) rotate(0deg) translate(0,-1.0em) }
+100% { transform: translate(0, 1.0em) rotate(360deg) translate(0,-1.0em) }
+}
+@-webkit-keyframes secsweep {
+0% { -webkit-transform: translate(0, 1.0em) rotate(0deg) translate(0,-1.0em) }
+100% { -webkit-transform: translate(0, 1.0em) rotate(360deg) translate(0,-1.0em) }
+}
+@keyframes secsweepof {
+0% {  transform: translate(0, 1.0em) rotate(0deg) translate(0,-1.0em);
+-o-transform: translate(0, 2em) rotate(0deg) translate(0,-2em) }
+100% { transform: translate(0, 1.0em) rotate(360deg) translate(0,-1.0em);
+-o-transform: translate(0, 2em) rotate(360deg) translate(0,-2em) }
+}
+@keyframes tick {
+0% { transform: rotate(0deg); }
+12% { transform:rotate(6deg); }
+100% { transform: rotate(6deg); }		
+}
+@-webkit-keyframes tick {
+0% { -webkit-transform: rotate(0deg); }
+12% { -webkit-transform:rotate(6deg); }
+100% { -webkit-transform: rotate(6deg); }		
+}
+@keyframes minsweep {
+0% { transform: translate(0, 1.6em) rotate(0deg) translate(0,-1.6em); }
+100% { transform: translate(0, 1.6em) rotate(360deg) translate(0,-1.6em); }
+}
+@-webkit-keyframes minsweep {
+0% { -webkit-transform: translate(0, 1.6em) rotate(0deg) translate(0,-1.6em); }
+50% { -webkit-transform: translate(0, 1.6em) rotate(180deg) translate(0,-1.6em); }
+100% { -webkit-transform: translate(0, 1.6em) rotate(360deg) translate(0,-1.6em); }
+}
+@keyframes hrsweep {
+100% {
+transform: rotate(360deg);
+}
+}
+@-webkit-keyframes hrsweep {
+100% {
+-webkit-transform: rotate(360deg);
+}
+}
+.hh,.clock .h {
+animation: hrsweep 43200s infinite linear;
+-webkit-animation: hrsweep 43200s infinite linear;
+}
+.m{
+animation: minsweep 3600s normal infinite linear;
+-webkit-animation: minsweep 3600s normal infinite linear;
+}
+.clock .s {
+animation: secsweepof 60s normal infinite linear; 
+-webkit-animation: secsweep 60s normal infinite linear;
+}
+.ss,.s {
+animation: tick 60s infinite linear;
+-webkit-animation: tick 60s infinite linear;
+}
+/* Vendor CSS prefixes */
+.clock {
+-webkit-transition: all 0.5s ease;
+-moz-transition: all 0.5s ease;
+-o-transition: all 0.5s ease;
+}
+.clock b>i,
+.clock i>i {
+-ms-transform:rotate(6deg);
+-webkit-transform:rotate(6deg);
+}
+
+
+.clock {
+transition:none;
+-webkit-transition: none;
+-moz-transition: none;
+-o-transition: none;
+}
+
+
+.clock b:nth-child(2) {
+transform:rotate(30deg);
+-ms-transform:rotate(30deg);
+-webkit-transform:rotate(30deg);
+}
+.clock b:nth-child(3) {
+transform:rotate(60deg);
+-ms-transform:rotate(60deg);
+-webkit-transform:rotate(60deg);
+}
+.clock b:nth-child(4) {
+transform:rotate(90deg);
+-ms-transform:rotate(90deg);
+-webkit-transform:rotate(90deg);
+}
+.clock b:nth-child(5) {
+transform:rotate(120deg);
+-ms-transform:rotate(120deg);
+-webkit-transform:rotate(120deg);
+}
+.clock b:nth-child(6) {
+transform:rotate(150deg);
+-ms-transform:rotate(150deg);
+-webkit-transform:rotate(150deg);
+}
+.clock i:nth-child(1) {
+transform:rotate(12deg);
+-ms-transform:rotate(12deg);
+-webkit-transform:rotate(12deg);
+}
+.clock i:nth-child(2) {
+transform:rotate(18deg);
+-ms-transform:rotate(18deg);
+-webkit-transform:rotate(18deg);
+}
+.clock i:nth-child(3) {
+transform:rotate(24deg);
+-ms-transform:rotate(24deg);
+-webkit-transform:rotate(24deg);	
+}
+/* IE10 fix */
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+#css3fixed:checked ~  .clock i, #css3fixed:checked ~  .clock b {
+border-left:solid 0px #fff;
+border-right:solid 0px #fff;
+}
+}
+</style>
+<script type="text/javascript">
+function checkTime(i) {
+	if (i < 10) {i = "0" + i;}  // add zero in front of numbers < 10
+	return i;
+}
+function startTime(cName,tz) {
+	var today = new Date();
+	var h = today.getHours()+tz;
+	var m = today.getMinutes();
+	var s = today.getSeconds();
+	if(h==24){h=0;}
+	h = checkTime(h);
+	m = checkTime(m);
+	s = checkTime(s);
+	document.getElementById(cName+'_digitime').innerHTML =	h + ":" + m + ":" + s;
+	var t = setTimeout(function() {startTime(cName,tz);}, 500);
+}
+function getDeg(cName,tz)
+{
+	var d = new Date();
+	var hr = d.getHours(); 
+	var mn = d.getMinutes(); 
+	var sc = d.getSeconds() - 1;
+	degsperhr=360/12;
+	degspermin=360/60;
+	degspersec=360/60;
+	mindegsperhr=degsperhr/60;
+	secdegspermin=degspersec/60;
+	deghr=((hr+tz)*degsperhr)+(mn*mindegsperhr);
+	degmn=(mn*degspermin)+(sc*secdegspermin);
+	degsc=sc*degspersec;
+	//return array(deghr,degmn,degsc);
+	stylesec=document.getElementsByTagName('style');
+	stylesec[0].innerHTML+='#'+cName+' .hh{transform: rotate('+deghr+'deg);-webkit-transform: rotate('+deghr+'deg);}#'+cName+' .mm{transform: rotate('+degmn+'deg);-webkit-transform: rotate('+degmn+'deg);}#'+cName+' .s{animation-delay: -'+sc+'s;-webkit-animation-delay: -'+sc+'s;}';
+}
+getDeg('whiteley',0);
+getDeg('arizona',-8);
+getDeg('singapore',+8);
+</script>
+</head>
+<body onload="startTime('whiteley',0);startTime('arizona',-8);startTime('singapore',+8)">
+<div class="clockdiv">
+<!-- clock -->
+<div class="clockholder">
+<div id="whiteley" class="clock">
+<div class="sh">
+<div class="hh">
+<div class="h"></div>
+</div>
+<div class="mm">
+<div class="m"></div>
+<div class="mr"></div>
+</div>
+<div class="ss">
+<div class="s"></div>
+</div>
+</div>
+<div class="ii">
+<b><i></i><i></i><i></i><i></i></b>
+<b><i></i><i></i><i></i><i></i></b>
+<b><i></i><i></i><i></i><i></i></b>
+<b><i></i><i></i><i></i><i></i></b>
+<b><i></i><i></i><i></i><i></i></b>
+<b><i></i><i></i><i></i><i></i></b>
+</div>
+<div class="innercircle"></div>
+<div class="hh">
+<div class="h"></div>
+</div>
+<div class="mm">
+<div class="m"></div>
+<div class="mr"></div>
+</div>
+<div class="ss">
+<div class="s"></div>
+<div class="sr"></div>
+</div>
+</div>
+<div class="country">Whiteley</div>
+<div id="whiteley_digitime" class="digitime"></div>
+</div>
+<!-- /clock -->
+
+<!-- clock -->
+<div class="clockholder">
+<div id="arizona" class="clock">
+<div class="sh">
+<div class="hh">
+<div class="h"></div>
+</div>
+<div class="mm">
+<div class="m"></div>
+<div class="mr"></div>
+</div>
+<div class="ss">
+<div class="s"></div>
+</div>
+</div>
+<div class="ii">
+<b><i></i><i></i><i></i><i></i></b>
+<b><i></i><i></i><i></i><i></i></b>
+<b><i></i><i></i><i></i><i></i></b>
+<b><i></i><i></i><i></i><i></i></b>
+<b><i></i><i></i><i></i><i></i></b>
+<b><i></i><i></i><i></i><i></i></b>
+</div>
+<div class="innercircle"></div>
+<div class="hh">
+<div class="h"></div>
+</div>
+<div class="mm">
+<div class="m"></div>
+<div class="mr"></div>
+</div>
+<div class="ss">
+<div class="s"></div>
+<div class="sr"></div>
+</div>
+</div>
+<div class="country">Phoenix</div>
+<div id="arizona_digitime" class="digitime"></div>
+</div>
+<!-- /clock -->
+
+<!-- clock -->
+<div class="clockholder">
+<div id="singapore" class="clock">
+<div class="sh">
+<div class="hh">
+<div class="h"></div>
+</div>
+<div class="mm">
+<div class="m"></div>
+<div class="mr"></div>
+</div>
+<div class="ss">
+<div class="s"></div>
+</div>
+</div>
+<div class="ii">
+<b><i></i><i></i><i></i><i></i></b>
+<b><i></i><i></i><i></i><i></i></b>
+<b><i></i><i></i><i></i><i></i></b>
+<b><i></i><i></i><i></i><i></i></b>
+<b><i></i><i></i><i></i><i></i></b>
+<b><i></i><i></i><i></i><i></i></b>
+</div>
+<div class="innercircle"></div>
+<div class="hh">
+<div class="h"></div>
+</div>
+<div class="mm">
+<div class="m"></div>
+<div class="mr"></div>
+</div>
+<div class="ss">
+<div class="s"></div>
+<div class="sr"></div>
+</div>
+</div>
+<div class="country">Singapore</div>
+<div id="singapore_digitime" class="digitime"></div>
+</div>
+<!-- /clock -->
+</div>
+</body></html>

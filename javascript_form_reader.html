@@ -1,0 +1,25 @@
+<script type="text/javascript">
+<!--//
+function addGroupMember(formId)
+{
+	theForm=document.getElementById(formId);
+	//firstChoice=radioValue('first');
+	//secondChoice=radioValue('second');
+	
+}
+function radioValue(fname)
+{
+	returnValue='';
+	length=theForm.elements[fname].length;
+	for(i=0;i<length;i++)
+	{
+		if(theForm.elements[fname][i].checked)
+		{
+			returnValue=theForm.elements[fname][i].value;
+			i=length;//end loop early if possible
+		}
+	}
+	return returnValue;
+}
+//-->
+</script>

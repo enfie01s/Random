@@ -1,0 +1,26 @@
+RewriteEngine on
+
+deny from 216.244.78.90
+deny from 195.190.13.118
+deny from 91.121.35.227
+deny from 5.9.223.17
+
+<Files 403.shtml>
+order allow,deny
+allow from all
+</Files>
+
+RewriteCond %{HTTP_REFERER} !^$
+RewriteCond %{HTTP_REFERER} !^http://aristia.net/.*$      [NC]
+RewriteCond %{HTTP_REFERER} !^http://aristia.net$      [NC]
+RewriteCond %{HTTP_REFERER} !^http://www.aristia.net/.*$      [NC]
+RewriteCond %{HTTP_REFERER} !^http://www.aristia.net$      [NC]
+RewriteCond %{HTTP_REFERER} !^http://www.neighbourhood-watch.net/.*$      [NC]
+RewriteCond %{HTTP_REFERER} !^http://www.neighbourhood-watch.net$      [NC]
+RewriteCond %{HTTP_REFERER} !^http://www.theoldergamers.com/.*$      [NC]
+RewriteCond %{HTTP_REFERER} !^http://www.theoldergamers.com$      [NC]
+RewriteRule .*\.(jpg|jpeg|gif|png|bmp)$ - [F,NC]
+
+ErrorDocument 403 /error403.html
+ErrorDocument 404 /error404.html
+ErrorDocument 500 /error500.html

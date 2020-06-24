@@ -1,0 +1,22 @@
+try {
+	$db = new PDO('mysql:dbname='.$database.';host='.$host, $username, $password);
+	$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//set to WARNING for public
+	$db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);//extra injection security
+	$db->query('SET NAMES utf8');//Solves the issue with £ sign in DB and extra injection security
+} catch (PDOException $ex) {
+	echo 'Connection failed: ' . $ex->getMessage();
+}
+
+$db1 = new PDO('mysql:dbname='.$database.';host='.$host, $username, $password, array(PDO::ATTR_PERSISTENT => true)); //for connecting to alt databases
+
+$q=$db->query("query"); //the main query call if no prepare is needed
+$q=$db->prepare("query"); //main query when we need to prepare(escape) for security
+$q->bindValue(':blah',"someval"); //when :blah is specified in the query
+$q->bindValue(1,"someval"); //when ? is specified in the query
+$q->execute(); //needed after a prepare. Either put an array in the brackets or bindValue or bindParam first
+$db->lastInsertId(); //done on the main db object
+$q->fetch(); //gets results like mysql_fetch_array
+$q->fetch(PDO::FETCH_ASSOC); //gets results like mysql_fetch_assoc
+$q->fetch(PDO::FETCH_NUM); //gets results like mysql_fetch_row
+$q->fetchAll(); //gets results to put in php array to use as foreach (for when mysql_data_seek was needed)
+$q->rowCount(); //like num_rows

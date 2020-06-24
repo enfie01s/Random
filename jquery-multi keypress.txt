@@ -1,0 +1,10 @@
+var keys = {};
+
+$(document).keydown(function (e) {
+    keys[e.which] = true;
+    console.log(keys)
+});
+
+$(document).keyup(function (e) {
+    delete keys[e.which];
+});

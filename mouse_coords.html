@@ -1,0 +1,38 @@
+ <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+				<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>Get Mouse Coordinates</title>
+<script type="text/javascript">
+var divObj;
+
+/**
+* capture mousemove event, this statement will cause browser to
+* call getMouseCoordites function each time mouse moves
+*/
+document.onmousemove=getMouseCoordinates;
+
+/**
+*identify which event is supported
+* Based on that collect pageX and pageY properties of the event object
+* pageX and pageY gets the X and Y cursor coordinates
+*/
+function getMouseCoordinates(event)
+{
+ev = event || window.event;
+divObj.innerHTML = "Mouse X:"+ev.pageX + " Mouse Y:"+ev.pageY;
+}
+
+//assign the mouseCoord Object to divObj
+function loadDiv()
+{
+divObj = document.getElementById("mouseCoord");
+}
+</script>
+</head>
+
+<body onLoad="loadDiv()">
+<div id="mouseCoord">Mouse Coordinates position will be displayed here.
+</div>
+</body>
+</html>
